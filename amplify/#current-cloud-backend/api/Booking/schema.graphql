@@ -1,0 +1,52 @@
+type Postazione @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  postazione: String
+  officeID: ID! @index(name: "byOffice")
+}
+
+type Prenotazione @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  surname: String
+  mail: String
+  date: AWSDate
+  startTime: Int
+  endTime: Int
+  officeID: ID @index(name: "byOffice")
+  salaID: ID @index(name: "bySala")
+  postazione: Postazione @hasOne
+  picture: String
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  surname: String
+  avatarKey: String
+  favorites: [ID]
+  prenotazioni: [ID]
+  mail: String
+  role: String
+}
+
+type Sala @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  office: Office @hasOne
+  prenotazioni: [Prenotazione] @hasMany(indexName: "bySala", fields: ["id"])
+  immagine: String
+  capienza: Int
+  piano: Int
+}
+
+type Office @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  indirizzo: String!
+  immagine: String
+  city: String!
+  capienza: Int!
+  postazioni: [Postazione] @hasMany(indexName: "byOffice", fields: ["id"])
+  prenotazioni: [Prenotazione] @hasMany(indexName: "byOffice", fields: ["id"])
+}
+ 

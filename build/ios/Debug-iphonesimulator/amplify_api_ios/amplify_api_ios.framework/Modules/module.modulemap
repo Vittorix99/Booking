@@ -1,0 +1,11 @@
+framework module amplify_api_ios {
+  umbrella header "amplify_api_ios-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module amplify_api_ios.Swift {
+    header "amplify_api_ios-Swift.h"
+    requires objc
+}

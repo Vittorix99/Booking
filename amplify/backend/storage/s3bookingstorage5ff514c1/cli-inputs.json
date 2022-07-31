@@ -1,0 +1,15 @@
+{
+  "resourceName": "s3bookingstorage5ff514c1",
+  "bucketName": "booking-storage-5ff514c1",
+  "policyUUID": "ce5cdc1b",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ",
+    "CREATE_AND_UPDATE"
+  ],
+  "authAccess": [
+    "READ",
+    "CREATE_AND_UPDATE",
+    "DELETE"
+  ]
+}

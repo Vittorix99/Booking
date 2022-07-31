@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/example/bookingmobile2/BuildConfig.java
+ com.example.bookingmobile2.BuildConfig

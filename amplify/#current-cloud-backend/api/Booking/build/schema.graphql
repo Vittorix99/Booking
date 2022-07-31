@@ -1,0 +1,511 @@
+
+type Postazione @aws_iam @aws_api_key {
+  id: ID!
+  postazione: String
+  officeID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Prenotazione @aws_iam @aws_api_key {
+  id: ID!
+  name: String
+  surname: String
+  mail: String
+  date: AWSDate
+  startTime: Int
+  endTime: Int
+  officeID: ID
+  salaID: ID
+  postazione: Postazione
+  picture: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  prenotazionePostazioneId: ID
+}
+
+type User @aws_iam @aws_api_key {
+  id: ID!
+  name: String
+  surname: String
+  avatarKey: String
+  favorites: [ID]
+  prenotazioni: [ID]
+  mail: String
+  role: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Sala @aws_iam @aws_api_key {
+  id: ID!
+  name: String
+  office: Office
+  prenotazioni(filter: ModelPrenotazioneFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPrenotazioneConnection
+  immagine: String
+  capienza: Int
+  piano: Int
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  salaOfficeId: ID
+}
+
+type Office @aws_iam @aws_api_key {
+  id: ID!
+  name: String!
+  indirizzo: String!
+  immagine: String
+  city: String!
+  capienza: Int!
+  postazioni(filter: ModelPostazioneFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPostazioneConnection
+  prenotazioni(filter: ModelPrenotazioneFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPrenotazioneConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelPostazioneConnection @aws_api_key @aws_iam {
+  items: [Postazione]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelPostazioneFilterInput {
+  id: ModelIDInput
+  postazione: ModelStringInput
+  officeID: ModelIDInput
+  and: [ModelPostazioneFilterInput]
+  or: [ModelPostazioneFilterInput]
+  not: ModelPostazioneFilterInput
+}
+
+type Query {
+  getPostazione(id: ID!): Postazione @aws_api_key @aws_iam
+  listPostaziones(filter: ModelPostazioneFilterInput, limit: Int, nextToken: String): ModelPostazioneConnection @aws_api_key @aws_iam
+  syncPostaziones(filter: ModelPostazioneFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelPostazioneConnection @aws_api_key @aws_iam
+  getPrenotazione(id: ID!): Prenotazione @aws_api_key @aws_iam
+  listPrenotaziones(filter: ModelPrenotazioneFilterInput, limit: Int, nextToken: String): ModelPrenotazioneConnection @aws_api_key @aws_iam
+  syncPrenotaziones(filter: ModelPrenotazioneFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelPrenotazioneConnection @aws_api_key @aws_iam
+  getUser(id: ID!): User @aws_api_key @aws_iam
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection @aws_api_key @aws_iam
+  syncUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserConnection @aws_api_key @aws_iam
+  getSala(id: ID!): Sala @aws_api_key @aws_iam
+  listSalas(filter: ModelSalaFilterInput, limit: Int, nextToken: String): ModelSalaConnection @aws_api_key @aws_iam
+  syncSalas(filter: ModelSalaFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelSalaConnection @aws_api_key @aws_iam
+  getOffice(id: ID!): Office @aws_api_key @aws_iam
+  listOffices(filter: ModelOfficeFilterInput, limit: Int, nextToken: String): ModelOfficeConnection @aws_api_key @aws_iam
+  syncOffices(filter: ModelOfficeFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelOfficeConnection @aws_api_key @aws_iam
+}
+
+input ModelPostazioneConditionInput {
+  postazione: ModelStringInput
+  officeID: ModelIDInput
+  and: [ModelPostazioneConditionInput]
+  or: [ModelPostazioneConditionInput]
+  not: ModelPostazioneConditionInput
+}
+
+input CreatePostazioneInput {
+  id: ID
+  postazione: String
+  officeID: ID!
+  _version: Int
+}
+
+input UpdatePostazioneInput {
+  id: ID!
+  postazione: String
+  officeID: ID
+  _version: Int
+}
+
+input DeletePostazioneInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createPostazione(input: CreatePostazioneInput!, condition: ModelPostazioneConditionInput): Postazione @aws_api_key @aws_iam
+  updatePostazione(input: UpdatePostazioneInput!, condition: ModelPostazioneConditionInput): Postazione @aws_api_key @aws_iam
+  deletePostazione(input: DeletePostazioneInput!, condition: ModelPostazioneConditionInput): Postazione @aws_api_key @aws_iam
+  createPrenotazione(input: CreatePrenotazioneInput!, condition: ModelPrenotazioneConditionInput): Prenotazione @aws_api_key @aws_iam
+  updatePrenotazione(input: UpdatePrenotazioneInput!, condition: ModelPrenotazioneConditionInput): Prenotazione @aws_api_key @aws_iam
+  deletePrenotazione(input: DeletePrenotazioneInput!, condition: ModelPrenotazioneConditionInput): Prenotazione @aws_api_key @aws_iam
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  createSala(input: CreateSalaInput!, condition: ModelSalaConditionInput): Sala @aws_api_key @aws_iam
+  updateSala(input: UpdateSalaInput!, condition: ModelSalaConditionInput): Sala @aws_api_key @aws_iam
+  deleteSala(input: DeleteSalaInput!, condition: ModelSalaConditionInput): Sala @aws_api_key @aws_iam
+  createOffice(input: CreateOfficeInput!, condition: ModelOfficeConditionInput): Office @aws_api_key @aws_iam
+  updateOffice(input: UpdateOfficeInput!, condition: ModelOfficeConditionInput): Office @aws_api_key @aws_iam
+  deleteOffice(input: DeleteOfficeInput!, condition: ModelOfficeConditionInput): Office @aws_api_key @aws_iam
+}
+
+type Subscription {
+  onCreatePostazione: Postazione @aws_subscribe(mutations: ["createPostazione"]) @aws_api_key @aws_iam
+  onUpdatePostazione: Postazione @aws_subscribe(mutations: ["updatePostazione"]) @aws_api_key @aws_iam
+  onDeletePostazione: Postazione @aws_subscribe(mutations: ["deletePostazione"]) @aws_api_key @aws_iam
+  onCreatePrenotazione: Prenotazione @aws_subscribe(mutations: ["createPrenotazione"]) @aws_api_key @aws_iam
+  onUpdatePrenotazione: Prenotazione @aws_subscribe(mutations: ["updatePrenotazione"]) @aws_api_key @aws_iam
+  onDeletePrenotazione: Prenotazione @aws_subscribe(mutations: ["deletePrenotazione"]) @aws_api_key @aws_iam
+  onCreateUser: User @aws_subscribe(mutations: ["createUser"]) @aws_api_key @aws_iam
+  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"]) @aws_api_key @aws_iam
+  onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"]) @aws_api_key @aws_iam
+  onCreateSala: Sala @aws_subscribe(mutations: ["createSala"]) @aws_api_key @aws_iam
+  onUpdateSala: Sala @aws_subscribe(mutations: ["updateSala"]) @aws_api_key @aws_iam
+  onDeleteSala: Sala @aws_subscribe(mutations: ["deleteSala"]) @aws_api_key @aws_iam
+  onCreateOffice: Office @aws_subscribe(mutations: ["createOffice"]) @aws_api_key @aws_iam
+  onUpdateOffice: Office @aws_subscribe(mutations: ["updateOffice"]) @aws_api_key @aws_iam
+  onDeleteOffice: Office @aws_subscribe(mutations: ["deleteOffice"]) @aws_api_key @aws_iam
+}
+
+type ModelPrenotazioneConnection @aws_api_key @aws_iam {
+  items: [Prenotazione]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelPrenotazioneFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  surname: ModelStringInput
+  mail: ModelStringInput
+  date: ModelStringInput
+  startTime: ModelIntInput
+  endTime: ModelIntInput
+  officeID: ModelIDInput
+  salaID: ModelIDInput
+  picture: ModelStringInput
+  and: [ModelPrenotazioneFilterInput]
+  or: [ModelPrenotazioneFilterInput]
+  not: ModelPrenotazioneFilterInput
+  prenotazionePostazioneId: ModelIDInput
+}
+
+input ModelPrenotazioneConditionInput {
+  name: ModelStringInput
+  surname: ModelStringInput
+  mail: ModelStringInput
+  date: ModelStringInput
+  startTime: ModelIntInput
+  endTime: ModelIntInput
+  officeID: ModelIDInput
+  salaID: ModelIDInput
+  picture: ModelStringInput
+  and: [ModelPrenotazioneConditionInput]
+  or: [ModelPrenotazioneConditionInput]
+  not: ModelPrenotazioneConditionInput
+  prenotazionePostazioneId: ModelIDInput
+}
+
+input CreatePrenotazioneInput {
+  id: ID
+  name: String
+  surname: String
+  mail: String
+  date: AWSDate
+  startTime: Int
+  endTime: Int
+  officeID: ID
+  salaID: ID
+  picture: String
+  _version: Int
+  prenotazionePostazioneId: ID
+}
+
+input UpdatePrenotazioneInput {
+  id: ID!
+  name: String
+  surname: String
+  mail: String
+  date: AWSDate
+  startTime: Int
+  endTime: Int
+  officeID: ID
+  salaID: ID
+  picture: String
+  _version: Int
+  prenotazionePostazioneId: ID
+}
+
+input DeletePrenotazioneInput {
+  id: ID!
+  _version: Int
+}
+
+type ModelUserConnection @aws_api_key @aws_iam {
+  items: [User]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  surname: ModelStringInput
+  avatarKey: ModelStringInput
+  favorites: ModelIDInput
+  prenotazioni: ModelIDInput
+  mail: ModelStringInput
+  role: ModelStringInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+input ModelUserConditionInput {
+  name: ModelStringInput
+  surname: ModelStringInput
+  avatarKey: ModelStringInput
+  favorites: ModelIDInput
+  prenotazioni: ModelIDInput
+  mail: ModelStringInput
+  role: ModelStringInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+input CreateUserInput {
+  id: ID
+  name: String
+  surname: String
+  avatarKey: String
+  favorites: [ID]
+  prenotazioni: [ID]
+  mail: String
+  role: String
+  _version: Int
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String
+  surname: String
+  avatarKey: String
+  favorites: [ID]
+  prenotazioni: [ID]
+  mail: String
+  role: String
+  _version: Int
+}
+
+input DeleteUserInput {
+  id: ID!
+  _version: Int
+}
+
+type ModelSalaConnection @aws_api_key @aws_iam {
+  items: [Sala]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelSalaFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  immagine: ModelStringInput
+  capienza: ModelIntInput
+  piano: ModelIntInput
+  and: [ModelSalaFilterInput]
+  or: [ModelSalaFilterInput]
+  not: ModelSalaFilterInput
+  salaOfficeId: ModelIDInput
+}
+
+input ModelSalaConditionInput {
+  name: ModelStringInput
+  immagine: ModelStringInput
+  capienza: ModelIntInput
+  piano: ModelIntInput
+  and: [ModelSalaConditionInput]
+  or: [ModelSalaConditionInput]
+  not: ModelSalaConditionInput
+  salaOfficeId: ModelIDInput
+}
+
+input CreateSalaInput {
+  id: ID
+  name: String
+  immagine: String
+  capienza: Int
+  piano: Int
+  _version: Int
+  salaOfficeId: ID
+}
+
+input UpdateSalaInput {
+  id: ID!
+  name: String
+  immagine: String
+  capienza: Int
+  piano: Int
+  _version: Int
+  salaOfficeId: ID
+}
+
+input DeleteSalaInput {
+  id: ID!
+  _version: Int
+}
+
+type ModelOfficeConnection @aws_api_key @aws_iam {
+  items: [Office]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelOfficeFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  indirizzo: ModelStringInput
+  immagine: ModelStringInput
+  city: ModelStringInput
+  capienza: ModelIntInput
+  and: [ModelOfficeFilterInput]
+  or: [ModelOfficeFilterInput]
+  not: ModelOfficeFilterInput
+}
+
+input ModelOfficeConditionInput {
+  name: ModelStringInput
+  indirizzo: ModelStringInput
+  immagine: ModelStringInput
+  city: ModelStringInput
+  capienza: ModelIntInput
+  and: [ModelOfficeConditionInput]
+  or: [ModelOfficeConditionInput]
+  not: ModelOfficeConditionInput
+}
+
+input CreateOfficeInput {
+  id: ID
+  name: String!
+  indirizzo: String!
+  immagine: String
+  city: String!
+  capienza: Int!
+  _version: Int
+}
+
+input UpdateOfficeInput {
+  id: ID!
+  name: String
+  indirizzo: String
+  immagine: String
+  city: String
+  capienza: Int
+  _version: Int
+}
+
+input DeleteOfficeInput {
+  id: ID!
+  _version: Int
+}
+

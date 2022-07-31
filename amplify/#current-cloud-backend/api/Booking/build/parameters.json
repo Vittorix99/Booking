@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "Booking",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "S3DeploymentBucket": "amplify-booking-staging-101951-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/864d4a1b7f551881e3d4e164843e67c6fb4ccae3"
+}
